@@ -109,6 +109,7 @@
             const radarName = document.getElementById('radarName').value;
             const loop = document.getElementById('loopToggle').checked ? 'loop' : '0';
             const isFull = document.getElementById('fullToggle').checked;
+            const animating = document.getElementById('loopToggle').checked;
             let url = '';
             
             if (isFull) {
@@ -122,7 +123,7 @@
                         "layer": layer,
                         "station": radarName
                     },
-                    "animating": false,
+                    "animating": animating,
                     "base": "standard",
                     "artcc": false,
                     "county": false,
@@ -166,7 +167,7 @@
                 <span class="slider"></span>
             </label>
             <label class="switch">
-                <input type="checkbox" id="fullToggle" name="fullToggle">
+                <input type="checkbox" id="fullToggle" name="fullToggle" checked>
                 <span class="slider"></span>
             </label>
             <label for="fullToggle">Full</label>
