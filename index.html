@@ -54,15 +54,97 @@
         button:hover {
             background-color: #0056b3;
         }
+        .toggle-container {
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .toggle-container label {
+            font-size: 16px;
+            margin: 0 10px;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 25px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 19px;
+            width: 19px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #007BFF;
+        }
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
     </style>
     <script>
         function openRadar(type) {
             const radarName = document.getElementById('radarName').value;
+            const loop = document.getElementById('loopToggle').checked ? 'loop' : '0';
+            const isFull = document.getElementById('fullToggle').checked;
             let url = '';
-            if (type === 'reflectivity') {
-                url = `https://radar.weather.gov/ridge/standard/${radarName}_loop.gif`;
-            } else if (type === 'velocity') {
-                url = `https://radar.weather.gov/ridge/standard/base_velocity/${radarName}_loop.gif`;
+            
+            if (isFull) {
+                const layer = type === 'velocity' ? 'sr_bvel' : 'sr_bref';
+                const settings = btoa(JSON.stringify({
+                    "agenda": {
+                        "id": "local",
+                        "location": null,
+                        "zoom": 7,
+                        "filter": null,
+                        "layer": layer,
+                        "station": radarName
+                    },
+                    "animating": false,
+                    "base": "standard",
+                    "artcc": false,
+                    "county": false,
+                    "cwa": false,
+                    "rfc": false,
+                    "state": false,
+                    "menu": true,
+                    "shortFusedOnly": true,
+                    "opacity": {
+                        "alerts": 0.8,
+                        "local": 0.6,
+                        "localStations": 0.8,
+                        "national": 0.6
+                    }
+                }));
+                url = `https://radar.weather.gov/?settings=v1_${settings}`;
+            } else {
+                if (type === 'reflectivity') {
+                    url = `https://radar.weather.gov/ridge/standard/${radarName}_${loop}.gif`;
+                } else if (type === 'velocity') {
+                    url = `https://radar.weather.gov/ridge/standard/base_velocity/${radarName}_${loop}.gif`;
+                }
             }
             window.open(url, '_blank');
         }
@@ -76,6 +158,19 @@
         <br>
         <button onclick="openRadar('reflectivity')">Open Reflectivity</button>
         <button onclick="openRadar('velocity')">Open Velocity</button>
+        <br>
+        <div class="toggle-container">
+            <label for="loopToggle">Loop</label>
+            <label class="switch">
+                <input type="checkbox" id="loopToggle" name="loopToggle" checked>
+                <span class="slider"></span>
+            </label>
+            <label class="switch">
+                <input type="checkbox" id="fullToggle" name="fullToggle">
+                <span class="slider"></span>
+            </label>
+            <label for="fullToggle">Full</label>
+        </div>
     </div>
 </body>
 </html>
