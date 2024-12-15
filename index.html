@@ -149,6 +149,37 @@
             }
             window.open(url, '_blank');
         }
+
+        function getQueryParams() {
+            const params = {};
+            const queryString = window.location.search.substring(1);
+            const queries = queryString.split("&");
+            queries.forEach(query => {
+                const [key, value] = query.split("=");
+                params[key] = decodeURIComponent(value);
+            });
+            return params;
+        }
+
+        function setRadarFromParams() {
+            const params = getQueryParams();
+            if (params.radarName) {
+                document.getElementById('radarName').value = params.radarName;
+            }
+            if (params.loop) {
+                document.getElementById('loopToggle').checked = params.loop === 'true';
+            }
+            if (params.full) {
+                document.getElementById('fullToggle').checked = params.full === 'true';
+            }
+            if (params.layer) {
+                openRadar(params.layer);
+            } else if (params.radarName) {
+                openRadar('reflectivity');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', setRadarFromParams);
     </script>
 </head>
 <body>
