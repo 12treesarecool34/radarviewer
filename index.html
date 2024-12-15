@@ -163,8 +163,8 @@
 
         function setRadarFromParams() {
             const params = getQueryParams();
-            if (params.radarName) {
-                document.getElementById('radarName').value = params.radarName;
+            if (params.radar) {
+                document.getElementById('radarName').value = params.radar;
             }
             if (params.loop) {
                 document.getElementById('loopToggle').checked = params.loop === 'true';
@@ -174,7 +174,7 @@
             }
             if (params.layer) {
                 openRadar(params.layer);
-            } else if (params.radarName) {
+            } else if (params.radar) {
                 openRadar('reflectivity');
             }
         }
